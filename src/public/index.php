@@ -28,6 +28,9 @@ $players = $stmt->fetchAll();
             <img src="images/<?php echo htmlspecialchars($player['players_image']); ?>" alt="<?php echo htmlspecialchars($player['name']); ?>" style="width: 150px;">
         </div>
     <?php endforeach; ?>
+    <div class=formulaire>
+        <a href="../app/add.php" title="Cliquez pour ajouter un joueur">Ajouter un joueur</a>
+    </div>
 
 </body>
 
