@@ -26,10 +26,11 @@ $players = $stmt->fetchAll();
             <p>Club: <?php echo htmlspecialchars($player['team']); ?></p>
             <p>Position: <?php echo htmlspecialchars($player['position']); ?></p>
             <img src="images/<?php echo htmlspecialchars($player['players_image']); ?>" alt="<?php echo htmlspecialchars($player['name']); ?>" style="width: 150px;">
+            <a href="update.php?id<? $player["id"] ?>">modifier un joueur</a>
         </div>
     <?php endforeach; ?>
     <div class=formulaire>
-        <a href="../app/add.php" title="Cliquez pour ajouter un joueur">Ajouter un joueur</a>
+        <a href="add.php" title="Cliquez pour ajouter un joueur">Ajouter un joueur</a>
     </div>
 
 </body>

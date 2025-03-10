@@ -106,8 +106,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="text" id="name" name="name" placeholder="Entrez le nom du joueur" required><br>
 
         <label for="position">Poste:</label>
-        <input type="text" id="position" name="position" placeholder="Entrez le poste du joueur" required><br>
-
+        <select id="position" name="position" required>
+            <option value="" disabled selected>Sélectionner une position</option>
+            <?php
+            foreach ($positions as $position) {
+                echo "<option value='" . $position['name'] . "'>" . $position['name'] . "</option>";
+            }
+            ?>
+        </select><br>
         <label for="team">Équipe:</label>
         <select id="team" name="team" required>
             <option value="" disabled selected>Sélectionner une équipe</option>

@@ -33,6 +33,8 @@ services:
       - ./src/public:/var/www/html
       - ./src/images:/var/www/html/images
       - ./src/app:/var/www/app
+      - ./src/uploads:/var/www/uploads
+
     ports:
       - "8080:80" # Port 8080 pour ton serveur PHP
     command: >
