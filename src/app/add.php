@@ -8,7 +8,6 @@ $errors = [];
 // Récupérer toutes les équipes de la base de données
 $query = "SELECT * FROM team";
 $stmt = $pdo->query($query);
-$teams = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Traitement du formulaire si le bouton est cliqué
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
