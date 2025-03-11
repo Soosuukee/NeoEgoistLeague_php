@@ -2,6 +2,9 @@
 // Inclure la connexion à la base de données
 require_once(__DIR__ . '/../app/connectDB.php');
 
+// Se connecter à la base de données
+$pdo = connectDB(); // Appel de la fonction pour initialiser $pdo
+
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     die("ID du joueur non spécifié.");
 }
