@@ -1,7 +1,7 @@
 <?php
 require_once(__DIR__ . '/../app/connectDB.php');
-//$password = password_hash("admin",PASSWORD_DEFAULT)
-//var_dump($password);
+$password = password_hash("admin", PASSWORD_DEFAULT);
+// var_dump($password);
 
 $errors = [];
 //-- 2) Vérifier les données provenant du formulaire lorsque il est validé / soumis / submit
@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors["username"] = " Le champ username doit etre d'au moins 4 caractères";
     }
     if (isset($_POST["password"]) == false || strlen($_POST["password"]) < 4) {
-        $errors["username"] = " Le champ password doit etre d'au moins 4 caractères";
+        $errors["password"] = " Le champ password doit etre d'au moins 4 caractères";
     }
 
     //----4) S'il n'y a pas d'erreur , je connecte mon utilisateur
@@ -23,6 +23,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo = connectDB();
         $query = $pdo->prepare(" SELECT * from User WHERE username = :username ");
         $query->execute(['username' => $_POST['username']]);
-        $player = $query->fetch();
+        $user = $query->fetch();
+
+        // 2- si un utilisateur avec le meme username est trouvé en BDD:
+        var_dump($user);
+        if ($user != false) {
+            if (password_verify($_POST["password"], $user["password"])) {
+                // session_start();
+                $_SESSION["username"] = $user["username"];
+                // header('Location: admin.php');
+                // exit;
+            } else {
+                $errors["login"] = "Nom d'utilisateur ou mot de passe incorrect";
+            }
+        }
     }
 }
+
+?>
+
+<h1>Login</h1>
+<form method="POST" action="login.php">
+    <label>Username</label>
+    <input required type="text" name="username">
+    <label>Password</label>
+    <input required type="password" name="password">
+    <button class="btn btn-outline-success">Se connecter</button>
+</form>

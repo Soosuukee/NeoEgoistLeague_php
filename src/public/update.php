@@ -5,11 +5,11 @@ require_once(__DIR__ . '/../app/connectDB.php');
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     die("ID du joueur non spécifié.");
 }
-
+$pdo = connectDB();
 $id = intval($_GET['id']);
 
 // Récupérer les infos du joueur
-$stmt = $pdo->prepare("SELECT * FROM player WHERE id = ?");
+$stmt = $pdo->prepare("SELECT * FROM players WHERE id = ?");
 $stmt->execute([$id]);
 $player = $stmt->fetch();
 
@@ -18,7 +18,7 @@ if (!$player) {
 }
 
 // Récupérer les équipes valides (les 5 définies dans la table player)
-$teamsQuery = $pdo->query("SELECT DISTINCT team FROM player");
+$teamsQuery = $pdo->query("SELECT DISTINCT team FROM players");
 $teams = $teamsQuery->fetchAll(PDO::FETCH_COLUMN);
 
 // Traitement du formulaire d'update
@@ -59,11 +59,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     // Mise à jour des données
-    $stmt = $pdo->prepare("UPDATE player SET name = ?, team = ?, position = ?, jersey_number = ?, players_image = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE players SET name = ?, team = ?, position = ?, jersey_number = ?, players_image = ? WHERE id = ?");
     $stmt->execute([$name, $team, $position, $jersey_number, $imageName, $id]);
 
     // Redirection après succès
-    header("Location: player_details.php?id=$id");
+    header("Location: index.php?id=$id");
     exit;
 }
 

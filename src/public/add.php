@@ -2,6 +2,9 @@
 require_once(__DIR__ . '/../app/connectDB.php');
 session_start(); // Démarrer la session pour gérer les messages de succès
 
+// Se connecter à la base de données
+$pdo = connectDB(); // Appel de la fonction pour initialiser $pdo
+
 // Tableau pour stocker les erreurs
 $errors = [];
 
@@ -18,9 +21,9 @@ $positions = $stmt_post->fetchAll(PDO::FETCH_ASSOC);
 // Traitement du formulaire si le bouton est cliqué
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Récupérer les valeurs envoyées par le formulaire
-    $name = $_POST['name'];
-    $team = $_POST['team'];
-    $position = $_POST['position'];
+    $name = htmlspecialchars($_POST['name']);
+    $team = htmlspecialchars($_POST['team']);
+    $position = htmlspecialchars($_POST['position']);
 
     // Vérifier si le nom, l'équipe et le poste sont valides
     if (empty($name)) {
@@ -36,37 +39,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Vérifier si le joueur existe déjà dans la même équipe avec le même nom et le même poste
-    $sql_check = "SELECT * FROM players WHERE name = :name AND team = :team AND position = :position";
+    $sql_check = "SELECT * FROM players WHERE name = :name; ";
     $stmt_check = $pdo->prepare($sql_check);
     $stmt_check->execute([
         ':name' => $name,
-        ':team' => $team,
-        ':position' => $position
     ]);
+    $player = $stmt->fetch();
+
 
     // Si un joueur est trouvé, ajouter une erreur
-    if ($stmt_check->rowCount() > 0) {
-        $errors[] = "Un joueur avec ce nom, ce poste et cette équipe existe déjà.";
-    }
-
-    // Traitement des fichiers images
-    if (isset($_FILES['player_image']) && $_FILES['player_image']['error'] == 0) {
-        // Définir le chemin de l'image du joueur
-        $players_image = '../uploads/' . $team . '/' . $position . '/' . basename($_FILES['player_image']['name']);
-        // Déplacer l'image dans le répertoire approprié
-        if (!move_uploaded_file($_FILES['player_image']['tmp_name'], $player_image)) {
-            $errors[] = "Une erreur est survenue lors du téléchargement de l'image du joueur.";
-        }
+    if ($player != false) {
+        $errors[] = "Un joueur avec ce nom existe déjà.";
     }
 
     // Si aucune erreur, insérer le joueur dans la base de données
     if (empty($errors)) {
-        $sql = "INSERT INTO players (name, players_image, team, position) 
+
+        // Traitement des fichiers images
+        if (isset($_FILES['player_image']) && $_FILES['player_image']['error'] == 0) {
+            // Créer le chemin du dossier s'il n'existe pas
+            $upload_dir = __DIR__ . '/../uploads/' . $team . '/' . $position . '/';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
+
+            // Définir le chemin de l'image du joueur
+            $players_image = $upload_dir . basename($_FILES['player_image']['name']);
+            // Déplacer l'image dans le répertoire approprié
+            if (!move_uploaded_file($_FILES['player_image']['tmp_name'], $players_image)) {
+                $errors[] = "Une erreur est survenue lors du téléchargement de l'image du joueur.";
+            }
+        }
+        // Enregistrer le chemin relatif dans la base de données
+        $relative_image_path = 'uploads/' . $team . '/' . $position . '/' . basename($_FILES['player_image']['name']);
+
+        $sql = "INSERT INTO players (name, players_image, team, position)
                 VALUES (:name, :players_image, :team, :position)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ':name' => $name,
-            ':players_image' => $players_image ?? '', // Si aucune image n'a été téléchargée, laisser vide
+            ':players_image' => $relative_image_path ?? '', // Utiliser le chemin relatif
             ':team' => $team,
             ':position' => $position
         ]);
@@ -75,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['success_message'] = "Joueur ajouté avec succès !";
 
         // Redirection vers la page d'index
-        header("Location: index.php");
+        header("Location: admin.php");
         exit; // Ne pas oublier de quitter après la redirection
     }
 }

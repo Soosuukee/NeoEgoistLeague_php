@@ -23,6 +23,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo = connectDB();
         $query = $pdo->prepare(" SELECT * from User WHERE username = :username ");
         $query->execute(['username' => $_POST['username']]);
-        $player = $query->fetch();
+        $user = $query->fetch();
+
+        // 2- si un utilisateur avec le meme username est trouvé en BDD:
+        var_dump($user);
     }
 }
+?>
+
+<h1>Login</h1>
+<form method="POST" action="login.php">
+    <label>Username</label>
+    <input required type="text" name="username">
+    <label>Password</label>
+    <input required type="password" name="password">
+    <button class="btn btn-outline-success">Se connecter</button>
+</form>

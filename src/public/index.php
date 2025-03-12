@@ -2,9 +2,19 @@
 // Inclure la connexion à la base de données
 require_once(__DIR__ . '/../app/connectDB.php');
 
+// Se connecter à la base de données
+$pdo = connectDB(); // Appel de la fonction pour initialiser $pdo
+
 // Récupérer les joueurs
 $stmt = $pdo->query("SELECT * FROM players");
 $players = $stmt->fetchAll();
+
+// Trier les joueurs en fonction du chemin de l'image
+usort($players, function ($a, $b) {
+    $pathA = strpos($a['players_image'], 'uploads/') === 0 ? 'uploads/' : 'images/';
+    $pathB = strpos($b['players_image'], 'uploads/') === 0 ? 'uploads/' : 'images/';
+    return strcmp($pathA, $pathB);
+});
 
 ?>
 
@@ -18,6 +28,9 @@ $players = $stmt->fetchAll();
 </head>
 
 <body>
+    <header>
+        <a href="login.php"> Se connecter</a>
+    </header>
     <h1>Liste des Joueurs</h1>
 
     <?php foreach ($players as $player): ?>
@@ -25,13 +38,9 @@ $players = $stmt->fetchAll();
             <h2><?php echo htmlspecialchars($player['name']); ?></h2>
             <p>Club: <?php echo htmlspecialchars($player['team']); ?></p>
             <p>Position: <?php echo htmlspecialchars($player['position']); ?></p>
-            <img src="images/<?php echo htmlspecialchars($player['players_image']); ?>" alt="<?php echo htmlspecialchars($player['name']); ?>" style="width: 150px;">
-            <a href="update.php?id<? $player["id"] ?>">modifier un joueur</a>
+            <img src="/<?php echo htmlspecialchars($player['players_image']); ?>" alt="<?php echo htmlspecialchars($player['name']); ?>" style="width: 150px;">
         </div>
     <?php endforeach; ?>
-    <div class=formulaire>
-        <a href="add.php" title="Cliquez pour ajouter un joueur">Ajouter un joueur</a>
-    </div>
 
 </body>
 
