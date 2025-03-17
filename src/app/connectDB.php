@@ -1,18 +1,21 @@
 <?php
-// Fichier : app/connectDB.php
-
-// Paramètres de connexion à la base de données
-$host = 'db';  // Remplace par l'adresse de ton serveur MySQL si nécessaire
-$dbname = 'neo_egoist_league';
-$username = 'ego';
-$password = 'Jinpachi';
-
-try {
-    // Création d'une nouvelle connexion PDO
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  // Pour gérer les erreurs
-} catch (PDOException $e) {
-    // Affichage d'une erreur si la connexion échoue
-    echo 'Erreur de connexion : ' . $e->getMessage();
-    exit;  // On arrête le script si la connexion échoue
+function connectDB(): PDO
+{
+    $host = 'db';
+    $dbName = 'neo_egoist_league';
+    $user = 'ego';
+    $password = 'Jinpachi';
+    try {
+        $pdo = new PDO(
+            'mysql:host=' . $host . ';dbname=' . $dbName . ';charset=utf8',
+            $user,
+            $password
+        );
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        return $pdo;
+    } catch (Exception $e) {
+        echo ("Erreur de connexion a la base de données. connectDB()");
+        die();
+    }
 }

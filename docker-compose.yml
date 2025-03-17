@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 version: '3.8'
 
+=======
+>>>>>>> b9d5eb8d3169e9e79b5a558ac2ef5549d5908e39
 services:
   # Service pour MySQL
   db:
@@ -14,9 +17,15 @@ services:
     volumes:
       - ./data:/var/lib/mysql
     ports:
+<<<<<<< HEAD
       - "3306:3306"
 
   # Service pour phpMyAdmin
+=======
+      - "3306:3306" # Port de la base de données, pas de conflit ici
+
+  # Service pour phpMyAdmin (port modifié pour éviter conflit)
+>>>>>>> b9d5eb8d3169e9e79b5a558ac2ef5549d5908e39
   phpmyadmin:
     image: phpmyadmin:latest
     container_name: phpmyadmin
@@ -24,17 +33,26 @@ services:
     environment:
       PMA_HOST: db
     ports:
+<<<<<<< HEAD
       - "8081:80"
 
   # Service pour le serveur PHP
   php:
     build: .
+=======
+      - "8081:80" # Port différent (8081 au lieu de 8080)
+
+  # Service pour le serveur PHP avec PHP 8.4 et installation de MySQLi
+  php:
+    image: php:8.4-apache
+>>>>>>> b9d5eb8d3169e9e79b5a558ac2ef5549d5908e39
     container_name: php
     restart: always
     volumes:
       - ./src/public:/var/www/html
       - ./src/images:/var/www/html/images
       - ./src/app:/var/www/app
+<<<<<<< HEAD
     ports:
       - "8080:80"
     depends_on:
@@ -45,3 +63,18 @@ networks:
   default:
     external: true
     name: mynetwork
+=======
+      - ./src/uploads:/var/www/html/uploads
+
+    ports:
+      - "8080:80" # Port 8080 pour ton serveur PHP
+    command: >
+      bash -c "docker-php-ext-install mysqli pdo pdo_mysql && apache2-foreground"
+
+# Si tu n'as pas besoin d'un réseau externe, tu peux supprimer cette section
+# Si tu veux utiliser un réseau externe, voici comment faire :
+networks:
+  default:
+    external: true
+    name: mynetwork # Assure-toi que "mynetwork" existe ou crée-le
+>>>>>>> b9d5eb8d3169e9e79b5a558ac2ef5549d5908e39
