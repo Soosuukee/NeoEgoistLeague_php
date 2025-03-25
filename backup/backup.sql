@@ -26,8 +26,7 @@ CREATE TABLE `country` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `flag` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=250 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -42,6 +41,92 @@ INSERT INTO `country` VALUES (1,'Japan','https://flagcdn.com/w320/jp.png'),(2,'F
 UNLOCK TABLES;
 
 --
+-- Table structure for table `image`
+--
+
+DROP TABLE IF EXISTS `image`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `image` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `url` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `image`
+--
+
+LOCK TABLES `image` WRITE;
+/*!40000 ALTER TABLE `image` DISABLE KEYS */;
+/*!40000 ALTER TABLE `image` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `offer`
+--
+
+DROP TABLE IF EXISTS `offer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `offer` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `team_id` int NOT NULL,
+  `player_id` int NOT NULL,
+  `amount` float DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `team_id` (`team_id`),
+  KEY `player_id` (`player_id`),
+  CONSTRAINT `offer_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`),
+  CONSTRAINT `offer_ibfk_2` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `offer`
+--
+
+LOCK TABLES `offer` WRITE;
+/*!40000 ALTER TABLE `offer` DISABLE KEYS */;
+/*!40000 ALTER TABLE `offer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `player`
+--
+
+DROP TABLE IF EXISTS `player`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `player` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `jersey_number` tinyint DEFAULT NULL,
+  `team_id` int DEFAULT NULL,
+  `country_id` int DEFAULT NULL,
+  `position_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `team_id` (`team_id`),
+  KEY `country_id` (`country_id`),
+  KEY `fk_position` (`position_id`),
+  CONSTRAINT `fk_position` FOREIGN KEY (`position_id`) REFERENCES `position` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `player_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `player_ibfk_2` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `player`
+--
+
+LOCK TABLES `player` WRITE;
+/*!40000 ALTER TABLE `player` DISABLE KEYS */;
+INSERT INTO `player` VALUES (1,'Miroku Darai',8,4,1,NULL),(2,'Eita Otoya',NULL,4,1,NULL),(3,'Meguru Bachira',NULL,4,1,NULL),(4,'Teru Kitsunezato',NULL,4,1,NULL),(5,'Haru Hayate',NULL,4,1,NULL),(6,'Itsuki Wakatsuki',NULL,4,1,NULL),(7,'Kazuma Nio',NULL,5,1,NULL),(8,'Hiiragi Reiji',NULL,5,1,NULL),(9,'Hyoma Chigiri',NULL,5,1,NULL),(10,'Seishiro Nagi',NULL,5,1,NULL),(11,'Reo Mikage',NULL,5,1,NULL),(12,'Nijiro Nanase',NULL,2,1,NULL),(13,'Kento Cho',NULL,2,1,NULL),(14,'Rin Itoshi',NULL,2,1,NULL),(15,'Ryusei Shido',NULL,2,1,NULL),(16,'Tsurugi Zantetsu',NULL,2,1,NULL),(17,'Tabito Karasu',NULL,2,1,NULL),(18,'Tokimitsu Aoshi',NULL,2,1,NULL),(19,'Ikki Niko',NULL,3,1,NULL),(20,'Jyubei Aryu',NULL,3,1,NULL),(21,'Oliver Aiku',NULL,3,1,NULL),(22,'Baro Shoei',NULL,3,1,NULL),(23,'Ishikari Yukio',NULL,3,1,NULL),(24,'Shuto Sendo',NULL,3,1,NULL),(25,'Gen Fukaku',NULL,3,1,NULL),(26,'Igarashi Gurimu',NULL,1,1,NULL),(27,'Kurona Ranze',NULL,1,1,NULL),(28,'Teppei Neru',NULL,1,1,NULL),(29,'Isagi Yoichi',NULL,1,1,NULL),(30,'Bachman',NULL,1,3,NULL),(31,'Gin Gagamaru',NULL,1,1,NULL),(32,'Hiori Yo',NULL,1,1,NULL),(33,'Kenyu Yukimiya',NULL,1,1,NULL),(34,'Raichi Jingo',NULL,1,1,NULL),(35,'Noel Noa',NULL,1,2,NULL),(36,'Michael Kaiser',NULL,1,3,NULL),(37,'Alexis Ness',NULL,1,3,NULL),(38,'Benedict Grim',NULL,1,3,NULL),(39,'Erik Gesner',NULL,1,3,NULL),(40,'Rensuke Kunigami',NULL,1,1,NULL),(41,'Jin Kiyora',NULL,1,1,NULL),(42,'Ali',NULL,1,3,NULL),(43,'Mensah',NULL,1,3,NULL),(44,'Igor Schneider',NULL,1,3,NULL),(45,'Theo Sachs',NULL,1,3,NULL),(46,'Ndiaye',NULL,1,3,NULL),(47,'Julian Loki',NULL,2,2,NULL),(48,'Charles Chevalier',NULL,2,2,NULL),(49,'Chapa',NULL,2,2,NULL),(50,'Akira Endoji',NULL,2,1,NULL),(51,'Haruhiko Yuzu',NULL,2,1,NULL),(52,'Renoir',NULL,2,2,NULL),(53,'Gabon',NULL,2,2,NULL),(54,'Michelin',NULL,2,2,NULL),(55,'Chris Prince',NULL,5,88,NULL),(56,'Agi',NULL,5,88,NULL),(57,'Driver',NULL,5,88,NULL),(58,'Swift',NULL,5,88,NULL),(59,'Busby',NULL,5,88,NULL),(60,'Rook',NULL,5,88,NULL),(61,'Young',NULL,5,88,NULL),(62,'Arthur',NULL,5,88,NULL),(63,'Damon',NULL,5,88,NULL),(64,'Kairu Saramadara',NULL,5,1,NULL),(65,'Taiga Tsunzaki',NULL,5,1,NULL),(66,'Hajime Nishioka',NULL,5,1,NULL),(67,'Junichi Wanima',NULL,5,1,NULL),(68,'Marc Snuffy',NULL,3,86,NULL),(69,'Don Lorenzo',NULL,3,68,NULL),(70,'Drago',NULL,3,68,NULL),(71,'Peron',NULL,3,68,NULL),(72,'Abdi',NULL,3,68,NULL),(73,'Rico',NULL,3,68,NULL),(74,'Canali',NULL,3,68,NULL),(75,'Shingen Tanaka',NULL,3,1,NULL),(76,'Kyohei Shiguma',NULL,3,1,NULL),(77,'Lavinho',NULL,4,5,NULL),(78,'Ignacio Lara',NULL,4,30,NULL),(79,'Ruiz',NULL,4,30,NULL),(80,'Picasso',NULL,4,30,NULL),(81,'Espesso',NULL,4,30,NULL),(82,'So',NULL,4,30,NULL),(83,'Bos',NULL,4,30,NULL),(84,'Gomez',NULL,4,30,NULL),(85,'Uraziz',NULL,4,30,NULL),(86,'Moro',NULL,4,30,NULL),(87,'Tetsu Sokura',NULL,4,1,NULL),(88,'Aiki Himizu',NULL,4,1,NULL),(89,'Shizuka Haiji',NULL,4,1,NULL),(90,'Birkenstock',NULL,1,3,NULL);
+/*!40000 ALTER TABLE `player` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `player_image`
 --
 
@@ -49,13 +134,13 @@ DROP TABLE IF EXISTS `player_image`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `player_image` (
-  `id` int NOT NULL AUTO_INCREMENT,
   `player_id` int NOT NULL,
-  `image_url` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `player_id` (`player_id`),
-  CONSTRAINT `player_image_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `players` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `image_id` int NOT NULL,
+  PRIMARY KEY (`player_id`,`image_id`),
+  KEY `image_id` (`image_id`),
+  CONSTRAINT `player_image_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `player_image_ibfk_2` FOREIGN KEY (`image_id`) REFERENCES `image` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -64,7 +149,6 @@ CREATE TABLE `player_image` (
 
 LOCK TABLES `player_image` WRITE;
 /*!40000 ALTER TABLE `player_image` DISABLE KEYS */;
-INSERT INTO `player_image` VALUES (1,1,'Miroku_Darai.jpg'),(2,2,'Eita_Otoya.jpg'),(3,3,'Meguru_Bachira.jpg'),(4,4,'Teru_Kitsunezato.jpg'),(5,5,'Haru_Hayate.jpg'),(6,6,'Itsuki_Wakatsuki.jpg'),(7,7,'Kazuma_Nio.jpg'),(8,8,'Hiiragi_Reiji.jpg'),(9,9,'Hyoma_Chigiri.jpg'),(10,10,'Seishiro_Nagi.jpg'),(11,11,'Reo_Mikage.jpg'),(12,12,'Nijiro_Nanase.jpg'),(13,13,'Kento_Cho.jpg'),(14,14,'Rin_Itoshi.jpg'),(15,15,'Ryusei_Shido.jpg'),(16,16,'Tsurugi_Zantetsu.jpg'),(17,17,'Tabito_Karasu.jpg'),(18,18,'Tokimitsu_Aoshi.jpg'),(19,19,'Ikki_Niko.jpg'),(20,20,'Jyubei_Aryu.jpg'),(21,21,'Oliver_Aiku.jpg'),(22,22,'Baro_Shoei.jpg'),(23,23,'Ishikari_Yukio.jpg'),(24,24,'Shuto_Sendo.jpg'),(25,25,'Gen_Fukaku.jpg'),(26,26,'Igarashi_Gurimu.jpg'),(27,27,'Kurona_Ranze.jpg'),(28,28,'Teppei_Neru.jpg'),(29,29,'Isagi_Yoichi.jpg'),(30,30,'Bachman.jpg'),(31,31,'Gin_Gagamaru.jpg'),(32,32,'Hiori_Yo.jpg'),(33,33,'Kenyu_Yukimiya.jpg'),(34,34,'Raichi_Jingo.jpg');
 /*!40000 ALTER TABLE `player_image` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -76,10 +160,12 @@ DROP TABLE IF EXISTS `player_weapon`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `player_weapon` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  `player_id` int NOT NULL,
+  `weapon_id` int NOT NULL,
+  PRIMARY KEY (`player_id`,`weapon_id`),
+  KEY `weapon_id` (`weapon_id`),
+  CONSTRAINT `player_weapon_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `player_weapon_ibfk_2` FOREIGN KEY (`weapon_id`) REFERENCES `weapon` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -89,39 +175,32 @@ CREATE TABLE `player_weapon` (
 
 LOCK TABLES `player_weapon` WRITE;
 /*!40000 ALTER TABLE `player_weapon` DISABLE KEYS */;
+INSERT INTO `player_weapon` VALUES (1,1),(2,1),(12,1),(14,1),(15,1),(35,1),(36,1),(48,1),(68,1),(70,1),(71,1),(77,1),(14,2),(15,2),(19,2),(21,2),(36,2),(11,3),(17,3),(19,3),(21,3),(36,3),(48,3),(68,3),(70,3),(71,3),(77,3),(14,4),(33,4),(36,4),(36,5),(3,6),(10,6),(11,6),(14,6),(21,6),(31,6),(33,6),(36,6),(37,6),(40,6),(41,6),(7,7),(15,7),(18,7),(21,7),(25,7),(35,7),(38,7),(40,7),(41,7),(56,7),(68,7),(70,7),(71,7),(77,7),(2,11),(33,11),(10,12),(17,12),(39,12),(68,12),(70,12),(71,12),(77,12),(38,13),(3,15),(14,16),(15,17),(17,18),(17,19),(88,19),(33,20),(33,21),(3,23),(14,23),(33,23),(35,23),(37,23),(38,23),(41,23),(69,23),(3,24),(37,24),(48,24),(15,25),(21,25),(40,26),(69,26),(15,27),(16,27),(28,27),(35,27),(73,27),(35,28),(12,29),(35,29),(40,29),(55,30),(55,31),(23,32),(56,32),(20,33),(56,33),(8,34),(10,34),(39,34),(11,35),(31,37),(31,38),(31,39),(11,40),(18,42),(47,42),(47,43),(13,45),(20,46),(41,47),(41,48),(7,49),(88,49),(88,50),(67,51),(40,54),(24,55),(20,57),(23,57),(37,58);
 /*!40000 ALTER TABLE `player_weapon` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `players`
+-- Table structure for table `position`
 --
 
-DROP TABLE IF EXISTS `players`;
+DROP TABLE IF EXISTS `position`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `players` (
+CREATE TABLE `position` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `position` enum('GK','DF','MF','FW') DEFAULT NULL,
-  `jersey_number` tinyint DEFAULT NULL,
-  `team_id` int DEFAULT NULL,
-  `player_image_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_team` (`team_id`),
-  KEY `fk_player_image` (`player_image_id`),
-  CONSTRAINT `fk_player_image` FOREIGN KEY (`player_image_id`) REFERENCES `player_image` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `fk_team` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `name` enum('GK','DF','MF','FW') NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `players`
+-- Dumping data for table `position`
 --
 
-LOCK TABLES `players` WRITE;
-/*!40000 ALTER TABLE `players` DISABLE KEYS */;
-INSERT INTO `players` VALUES (1,'Miroku Darai','DF',8,3,1),(2,'Eita Otoya','FW',NULL,4,2),(3,'Meguru Bachira','FW',NULL,4,3),(4,'Teru Kitsunezato','FW',NULL,4,4),(5,'Haru Hayate','MF',NULL,4,5),(6,'Itsuki Wakatsuki','MF',NULL,4,6),(7,'Kazuma Nio','DF',NULL,5,7),(8,'Hiiragi Reiji','FW',NULL,5,8),(9,'Hyoma Chigiri','FW',NULL,5,9),(10,'Seishiro Nagi','FW',NULL,5,10),(11,'Reo Mikage','MF',NULL,5,11),(12,'Nijiro Nanase','DF',NULL,2,12),(13,'Kento Cho','FW',NULL,2,13),(14,'Rin Itoshi','FW',NULL,2,14),(15,'Ryusei Shido','FW',NULL,2,15),(16,'Tsurugi Zantetsu','FW',NULL,2,16),(17,'Tabito Karasu','MF',NULL,2,17),(18,'Tokimitsu Aoshi','MF',NULL,2,18),(19,'Ikki Niko','DF',NULL,3,19),(20,'Jyubei Aryu','DF',NULL,3,20),(21,'Oliver Aiku','DF',NULL,3,21),(22,'Baro Shoei','FW',NULL,3,22),(23,'Ishikari Yukio','FW',NULL,3,23),(24,'Shuto Sendo','FW',NULL,3,24),(25,'Gen Fukaku','GK',NULL,3,25),(26,'Igarashi Gurimu','DF',NULL,1,26),(27,'Kurona Ranze','DF',NULL,1,27),(28,'Teppei Neru','DF',NULL,1,28),(29,'Isagi Yoichi','FW',NULL,1,29),(30,'Bachman','GK',NULL,1,30),(31,'Gin Gagamaru','GK',NULL,1,31),(32,'Hiori Yo','MF',NULL,1,32),(33,'Kenyu Yukimiya','MF',NULL,1,33),(34,'Raichi Jingo','MF',NULL,1,34);
-/*!40000 ALTER TABLE `players` ENABLE KEYS */;
+LOCK TABLES `position` WRITE;
+/*!40000 ALTER TABLE `position` DISABLE KEYS */;
+INSERT INTO `position` VALUES (1,'GK'),(2,'DF'),(3,'MF'),(4,'FW');
+/*!40000 ALTER TABLE `position` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -137,9 +216,7 @@ CREATE TABLE `team` (
   `country_id` int DEFAULT NULL,
   `is_in_NEL` tinyint(1) DEFAULT '0',
   `team_image` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `country_id` (`country_id`),
-  CONSTRAINT `team_ibfk_1` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE SET NULL
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -189,9 +266,7 @@ CREATE TABLE `weapon` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `description` text,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  UNIQUE KEY `unique_weapon_name` (`name`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -214,4 +289,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-16 23:25:46
+-- Dump completed on 2025-03-20 20:00:46
